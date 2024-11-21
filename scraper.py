@@ -1,94 +1,51 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-import time
 import pandas as pd
+from bs4 import BeautifulSoup
 
-# Set up Selenium WebDriver (Ensure you have downloaded the appropriate driver)
-driver = webdriver.Chrome(executable_path='/path/to/chromedriver')
+def extract_html_to_excel(html_file, output_file):
+    """
+    Extracts table data from an HTML file and saves it as an Excel file.
 
-# Open LinkedIn login page
-driver.get('https://www.linkedin.com/login')
+    :param html_file: Path to the HTML file to parse.
+    :param output_file: Path to save the resulting Excel file.
+    """
+    # Load the HTML content
+    with open(html_file, 'r', encoding='utf-8') as file:
+        html_content = file.read()
 
-# Provide your LinkedIn credentials
-username = driver.find_element(By.ID, 'username')
-username.send_keys('your-email@example.com')
+    # Parse the HTML using BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
 
-password = driver.find_element(By.ID, 'password')
-password.send_keys('your-password')
+    # Find all rows in the table
+    rows = soup.select('tr')
 
-# Log in
-password.send_keys(Keys.RETURN)
+    # Extract headers and data
+    data = []
+    headers = []
 
-# Allow time for login
-time.sleep(5)
+    if rows:
+        # Extract headers if present
+        header_row = rows[0].find_all('th')
+        if header_row:
+            headers = [header.get_text(strip=True) for header in header_row]
+            data_rows = rows[1:]  # Skip the header row
+        else:
+            data_rows = rows
 
-# List to store alumni data
-alumni_data = []
+        # Extract data rows
+        for row in data_rows:
+            cols = row.find_all(['td', 'th'])
+            data.append([col.get_text(strip=True) for col in cols])
 
-# List of LinkedIn profile URLs to scrape
-linkedin_urls = ['https://www.linkedin.com/in/sample-profile1', 'https://www.linkedin.com/in/sample-profile2']
+    # Create a DataFrame
+    df = pd.DataFrame(data, columns=headers if headers else None)
 
-# Loop through each LinkedIn profile URL
-for url in linkedin_urls:
-    driver.get(url)
-    time.sleep(3)  # Allow the page to load
+    # Save to Excel
+    df.to_excel(output_file, index=False)
+    print(f"Data has been saved to {output_file}")
 
-    # Scraping each data point
-    try:
-        name = driver.find_element(By.CSS_SELECTOR, 'li.inline.t-24.t-black.t-normal').text
-    except:
-        name = None
+# Specify the input HTML file and output Excel file
+html_file_path = 'path_to_your_html_file.html'  # Replace with your HTML file path
+output_excel_path = 'output_file.xlsx'  # Replace with your desired output file name
 
-    try:
-        job_title = driver.find_element(By.CSS_SELECTOR, 'h2.mt1.t-18.t-black.t-normal').text
-    except:
-        job_title = None
-
-    try:
-        employer = driver.find_element(By.CSS_SELECTOR, 'span.t-14.t-black.t-normal').text
-    except:
-        employer = None
-
-    try:
-        hometown = driver.find_element(By.CSS_SELECTOR, 'li.t-16.t-black.t-normal.inline-block').text
-    except:
-        hometown = None
-
-    # Graduation date and/or major (from the Education section)
-    try:
-        education_section = driver.find_element(By.XPATH, "//section[contains(@id,'education')]")
-        graduation_info = education_section.text  # You can further split this text if necessary
-    except:
-        graduation_info = None
-
-    # LinkedIn profile URL
-    linkedin_url = driver.current_url
-
-    # Email (Check contact info if available)
-    try:
-        driver.find_element(By.PARTIAL_LINK_TEXT, 'Contact info').click()
-        time.sleep(2)
-        email = driver.find_element(By.XPATH, "//a[contains(@href, 'mailto:')]").text
-    except:
-        email = None
-
-    # Add the data to the list
-    alumni_data.append({
-        'Name': name,
-        'Hometown': hometown,
-        'Employer': employer,
-        'Job Title': job_title,
-        'Email': email,
-        'Graduation Info': graduation_info,
-        'LinkedIn URL': linkedin_url
-    })
-
-    time.sleep(5)  # Avoid scraping too fast
-
-# Convert the list to a DataFrame and save it as CSV
-df = pd.DataFrame(alumni_data)
-df.to_csv('alumni_data.csv', index=False)
-
-# Close the browser
-driver.quit()
+# Run the function
+extract_html_to_excel(html_file_path, output_excel_path)
