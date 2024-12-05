@@ -44,8 +44,8 @@ def extract_html_to_excel(html_file, output_file):
     print(f"Data has been saved to {output_file}")
 
 # Specify the input HTML file and output Excel file
-html_file_path = 'path_to_your_html_file.html'  # Replace with your HTML file path
-output_excel_path = 'output_file.xlsx'  # Replace with your desired output file name
+html_file_path = '/Users/shriatluri/DATAMINE/dataminealumniscraper/LinkedIn Profile Scraper _ PhantomBuster.html'  # Replace with your HTML file path
+output_excel_path = 'e.xlsx'  # Replace with your desired output file name
 
 # Run the function
 extract_html_to_excel(html_file_path, output_excel_path)
