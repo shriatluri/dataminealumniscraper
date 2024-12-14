@@ -22,6 +22,44 @@ This project is a **Streamlit-based application** designed to visualize and mana
 ---
 
 ## Project Structure
+### `scraper.py`
+
+The `scraper.py` script is designed to automate the process of collecting alumni data from LinkedIn profiles. This script uses **Selenium** to log in to LinkedIn, navigate to the provided profile URLs, and scrape specific details such as name, employer, job title, and location. The collected data is saved into a CSV file for integration with the dashboard application.
+
+---
+
+#### **Key Functionalities**:
+1. **Automated Login**:
+   - Logs into LinkedIn securely using provided credentials.
+2. **Profile Scraping**:
+   - Collects the following information from each LinkedIn profile:
+     - Name
+     - Employer
+     - Job Title
+     - Location
+     - LinkedIn Profile URL
+3. **Data Export**:
+   - Stores the scraped data in a structured CSV file for use in the alumni dashboard.
+
+---
+
+#### **File Requirements**:
+- Input: A CSV file containing LinkedIn profile URLs in a column named `linkedin_url`.
+- Output: A CSV file (`scraped_data.csv`) containing the scraped alumni details.
+
+---
+
+#### **How to Use**:
+1. **Set Up LinkedIn Credentials**:
+   - Store your LinkedIn username and password in a secure `.env` file (or directly in the script if necessary):
+     ```
+     LINKEDIN_USERNAME=your_email@example.com
+     LINKEDIN_PASSWORD=your_password
+     ```
+
+2. **Run the Script**:
+   ```bash
+   python scraper.py
 
 ### `webapp.py`
 The core Streamlit application for visualizing and filtering alumni data.
