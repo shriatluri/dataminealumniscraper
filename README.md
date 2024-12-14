@@ -24,42 +24,66 @@ This project is a **Streamlit-based application** designed to visualize and mana
 ## Project Structure
 ### `scraper.py`
 
-The `scraper.py` script is designed to automate the process of collecting alumni data from LinkedIn profiles. This script uses **Selenium** to log in to LinkedIn, navigate to the provided profile URLs, and scrape specific details such as name, employer, job title, and location. The collected data is saved into a CSV file for integration with the dashboard application.
+The `scraper.py` script is a simple tool designed to convert LinkedIn profile data exported from **PhantomBuster's HTML extension** into an Excel file. It parses an HTML file containing table data and extracts relevant information, saving it as an easy-to-read Excel file for further analysis.
 
 ---
 
-#### **Key Functionalities**:
-1. **Automated Login**:
-   - Logs into LinkedIn securely using provided credentials.
-2. **Profile Scraping**:
-   - Collects the following information from each LinkedIn profile:
-     - Name
-     - Employer
-     - Job Title
-     - Location
-     - LinkedIn Profile URL
-3. **Data Export**:
-   - Stores the scraped data in a structured CSV file for use in the alumni dashboard.
+#### **How to Use**
 
----
+1. **Export HTML from PhantomBuster**:
+   - Use PhantomBuster to scrape LinkedIn profiles and export the data as an **HTML file**.
+   - Save the exported file (e.g., `LinkedIn_Profile_Scraper.html`) to your local machine.
 
-#### **File Requirements**:
-- Input: A CSV file containing LinkedIn profile URLs in a column named `linkedin_url`.
-- Output: A CSV file (`scraped_data.csv`) containing the scraped alumni details.
-
----
-
-#### **How to Use**:
-1. **Set Up LinkedIn Credentials**:
-   - Store your LinkedIn username and password in a secure `.env` file (or directly in the script if necessary):
-     ```
-     LINKEDIN_USERNAME=your_email@example.com
-     LINKEDIN_PASSWORD=your_password
+2. **Specify File Paths**:
+   - Open the `scraper.py` script and set the paths for:
+     - **Input HTML file**: The file exported by PhantomBuster.
+     - **Output Excel file**: The name of the Excel file where the parsed data will be saved.
+   - Example:
+     ```python
+     html_file_path = '/path/to/LinkedIn_Profile_Scraper.html'  # Replace with your PhantomBuster HTML file
+     output_excel_path = 'linkedin_profiles.xlsx'  # Replace with desired output file name
      ```
 
-2. **Run the Script**:
-   ```bash
-   python scraper.py
+3. **Run the Script**:
+   - Execute the script with Python:
+     ```bash
+     python scraper.py
+     ```
+
+4. **Output**:
+   - The extracted data will be saved to the specified **Excel file** (e.g., `linkedin_profiles.xlsx`).
+
+---
+
+#### **What You Need to Know**
+- **Input File**: The script expects an HTML file with table data (exported by PhantomBuster).
+- **Output File**: The script generates an Excel file with the extracted data.
+- **No Modifications Needed**: Simply update the `html_file_path` and `output_excel_path` in the script.
+
+---
+
+#### **Sample Input and Output**
+
+**Input File (HTML)**:
+An HTML file exported from PhantomBuster containing LinkedIn profile data in table format.
+
+**Output File (Excel)**:
+A structured Excel file with the extracted data:
+| Name              | Employer    | Job Title          | Location       |
+|-------------------|-------------|--------------------|----------------|
+| Jack W. Doherty   | Oracle      | Software Engineer  | Santa Claraca  |
+| Sarah J. Johnson  | Google      | Data Scientist     | San Francisco  |
+
+---
+
+#### **Dependencies**
+Ensure the following libraries are installed:
+- **Pandas**: For handling data and exporting to Excel.
+- **BeautifulSoup4**: For parsing the HTML file.
+
+Install them with:
+```bash
+pip install pandas beautifulsoup4
 
 ### `webapp.py`
 The core Streamlit application for visualizing and filtering alumni data.
