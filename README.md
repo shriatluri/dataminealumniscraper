@@ -82,7 +82,6 @@ Ensure the following libraries are installed:
 - **BeautifulSoup4**: For parsing the HTML file.
 
 Install them with:
-```bash
 pip install pandas beautifulsoup4
 
 ### `webapp.py`
